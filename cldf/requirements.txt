@@ -2,7 +2,7 @@ appdirs==1.4.3
 certifi==2018.4.16
 chardet==3.0.4
 -e git+https://github.com/cldf/cldfbench.git@c4cc1257991b1c67978cec3570660c9a5e3a8adf#egg=cldfbench
--e git+https://github.com/cldf-datasets/dplacetrees.git@4c867cf5d28660af9dbdf1406b8a30fc4626c345#egg=cldfbench_dplacetrees
+-e git+https://github.com/cldf-datasets/dplacetrees.git@6582d6c51854f2bb810468b26238f3f46e8a214e#egg=cldfbench_dplacetrees
 -e git+https://github.com/cldf-datasets/wals.git@69731a38df1e5196a9b09d1300bae3e157338c76#egg=cldfbench_wals
 -e git+https://github.com/cldf/cldfcatalog.git@f26c9ac38c1ab111a55682ae83f4ac1cb03333c3#egg=cldfcatalog
 clldutils==3.5.0

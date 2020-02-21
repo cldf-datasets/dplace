@@ -40,7 +40,12 @@ class Dataset(BaseDataset):
             {"name": "rooted", "datatype": "boolean"},
             "Newick",
             "Type",
+            "dplace_ID",
+            "source",
         )
+        #
+        # FIXME: need to store the original tree ID and add the source!
+        #
         t = args.writer.cldf.add_table(
             'treelabels.csv',
             {"name": 'ID', "propertyUrl": "http://cldf.clld.org/v1.0/terms.rdf#id"},
@@ -51,7 +56,8 @@ class Dataset(BaseDataset):
         t.add_foreign_key('Tree_ID', 'trees.csv', 'ID')
         gcs = set()
         treelabel_id = 0
-        for d in self.raw_dir.iterdir():
+        tree_id = 0
+        for d in sorted(self.raw_dir.iterdir(), key=lambda p: p.stem):
             if d.is_dir():
                 print(d.stem)
                 labels = {
@@ -64,14 +70,16 @@ class Dataset(BaseDataset):
                     newick = loads(tree.newick_string, strip_comments=True)[0]
                     for n in newick.walk():
                         n.name = labels.get(n.name, n.name)
+                    tree_id += 1
                     args.writer.objects['trees.csv'].append({
-                        'ID': '{0}-summary'.format(d.stem),
+                        'ID': str(tree_id),
                         'Name': tree.name,
                         'rooted': tree.rooted,
                         'Newick': newick.newick,
                         "Type": 'summary',
+                        "dplace_id": d.stem,
                     })
-                    tree_ids.append('{0}-summary'.format(d.stem))
+                    tree_ids.append(tree_id)
                 if d.joinpath('posterior.trees').exists():
                     nx = NexusReader.from_file(d.joinpath('posterior.trees'))
                     nx.trees.detranslate()
@@ -79,14 +87,16 @@ class Dataset(BaseDataset):
                         newick = loads(tree.newick_string, strip_comments=True)[0]
                         for n in newick.walk():
                             n.name = labels.get(n.name, n.name)
+                        tree_id += 1
                         args.writer.objects['trees.csv'].append({
-                            'ID': '{0}-posterior-{1}'.format(d.stem, i),
+                            'ID': str(tree_id),
                             'Name': tree.name,
                             'rooted': tree.rooted,
                             'Newick': newick.newick,
                             "Type": 'sample',
+                            "dplace_id": d.stem,
                         })
-                        tree_ids.append('{0}-posterior-{1}'.format(d.stem, i))
+                        tree_ids.append(tree_id)
                 for name, gc in sorted(labels.items()):
                     if gc:
                         gcs.add(gc)
@@ -95,7 +105,7 @@ class Dataset(BaseDataset):
                             'ID': str(treelabel_id),
                             'Name': name,
                             'Language_ID': gc,
-                            'Tree_ID': tree_ids,
+                            'Tree_ID': [str(i) for i in tree_ids],
                         })
         for gc in sorted(gcs):
             lang = args.glottolog.api.cached_languoids.get(gc)

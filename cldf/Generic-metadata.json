@@ -15,7 +15,7 @@
             "rdf:type": "prov:Entity",
             "dc:title": "Repository",
             "rdf:about": "https://github.com/cldf-datasets/dplacetrees",
-            "dc:created": "4c867cf"
+            "dc:created": "6582d6c"
         },
         {
             "rdf:type": "prov:Entity",
@@ -135,6 +135,14 @@
                     {
                         "datatype": "string",
                         "name": "Type"
+                    },
+                    {
+                        "datatype": "string",
+                        "name": "dplace_ID"
+                    },
+                    {
+                        "datatype": "string",
+                        "name": "source"
                     }
                 ],
                 "primaryKey": [
